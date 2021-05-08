@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: '主页',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -103,43 +103,67 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('一共有组合数：' + xrt.length.toString()),
-            TextField(
-                decoration: InputDecoration(labelText: '请输入目标序号，多个序号间用，分割'),
-                controller: _targetController,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                height: 10,
+              ),
+              Text('一共有组合数：' + xrt.length.toString()),
+              TextField(
+                  decoration: InputDecoration(labelText: '请输入目标序号，多个序号间用英文,分割'),
+                  controller: _targetController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp('[0-9\,]'))
+                  ]),
+              TextField(
+                decoration: InputDecoration(labelText: '请输入每个组合的数量'),
+                controller: _numController,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp('[0-9\,]'))
-                ]),
-            TextField(
-              decoration: InputDecoration(labelText: '请输入组合的数量'),
-              controller: _numController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp('[0-9]'))
-              ],
-            ),
-            Expanded(
-              child: ListView(
-                children: xrt.map((e) {
-                  String show = '';
-                  e.forEach((element) {
-                    show += element.toString();
-                    show += ',';
-                  });
-                  return Center(child: Text(show));
-                }).toList(),
+                  FilteringTextInputFormatter.allow(RegExp('[0-9]'))
+                ],
               ),
-            ),
-          ],
+              Expanded(
+                  child: ListView.separated(
+                      itemBuilder: (context, index) {
+                        String title = '';
+                        xrt[index].forEach((element) {
+                          title += element.toString();
+                          if (xrt[index].last != element) {
+                            title += ',';
+                          }
+                        });
+                        return ListTile(
+                          leading: Text(
+                            (index + 1).toString(),
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          title: Center(child: Text(title)),
+                          onLongPress: () async {
+                            await Clipboard.setData(ClipboardData(text: title));
+                            print('拷贝成功-$title');
+                          },
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          height: .5,
+                          indent: 0,
+                          color: Color(0xFFDDDDDD),
+                        );
+                      },
+                      itemCount: xrt.length)),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        tooltip: '',
         child: Text('生成'),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

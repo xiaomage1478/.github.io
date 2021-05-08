@@ -2,7 +2,7 @@
 
 A new Flutter project.
 
-### 注意：gh_pages 分支里的index.html 需要修改<base href="https://xiaomage1478.github.io/flutter/">
+### 注意：gh_pages 分支里的index.html 需要修改 ```<base href="https://xiaomage1478.github.io/flutter/">```
 
 ## Getting Started
 
